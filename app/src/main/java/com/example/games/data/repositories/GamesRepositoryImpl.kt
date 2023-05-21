@@ -3,13 +3,15 @@ package com.example.games.data.repositories
 import com.example.games.data.mappers.toDomain
 import com.example.games.data.network.GamesApiService
 import com.example.games.domain.models.Game
+import com.example.games.domain.models.GamePreview
 import com.example.games.domain.repositories.GamesRepository
+import javax.inject.Inject
 
-class GamesRepositoryImpl(private val remoteSource: GamesApiService) : GamesRepository {
+class GamesRepositoryImpl @Inject constructor(private val remoteSource: GamesApiService) : GamesRepository {
 
-    override suspend fun getGamesList(): List<Game> {
-        return remoteSource.getGames().map {gameResponse ->
-            gameResponse.toDomain()
+    override suspend fun getGamesList(): List<GamePreview> {
+        return remoteSource.getGames().map {gamePreviewResponse ->
+            gamePreviewResponse.toDomain()
         }
     }
 
