@@ -39,7 +39,7 @@ fun GameListItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(120.dp)
+            .height(150.dp)
             .clickable { onClick.invoke(gamePreview) },
         shape = RoundedCornerShape(10.dp),
         elevation = 5.dp
@@ -66,7 +66,9 @@ fun Thumbnail(gamePreview: GamePreview) {
     Box(
         modifier = Modifier
             .fillMaxHeight()
-            .width(150.dp),
+            .fillMaxWidth(
+                fraction = 0.4f
+            ),
         contentAlignment = Alignment.Center
     ) {
         val painter = rememberAsyncImagePainter(model = gamePreview.thumbnail)
@@ -93,12 +95,12 @@ fun Thumbnail(gamePreview: GamePreview) {
 fun MainInfo(gamePreview: GamePreview) {
     Text(
         text = gamePreview.title,
-        style = Typography.h6
+        style = Typography.h6,
     )
     Text(
         text = gamePreview.shortDescription,
         style = Typography.caption,
-        maxLines = 3,
+        maxLines = 4,
         overflow = TextOverflow.Ellipsis
     )
 }

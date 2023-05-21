@@ -13,8 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.games.App
 import com.example.games.R
-import com.example.games.di.DaggerAppComponent
 import com.example.games.presentation.ui.theme.GamesTheme
 import com.example.games.presentation.ui.theme.Typography
 
@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val component = DaggerAppComponent.builder().build()
+        val component = (application as App).appComponent
 
         setContent {
             GamesTheme { // A surface container using the 'background' color from the theme

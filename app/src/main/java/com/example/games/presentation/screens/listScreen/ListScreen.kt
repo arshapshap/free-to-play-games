@@ -1,22 +1,22 @@
 package com.example.games.presentation.screens.listScreen
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.commandiron.compose_loading.FadingCircle
 import com.example.games.domain.models.GamePreview
 import com.example.games.domain.models.Platform
 import com.example.games.presentation.Screen
+import com.example.games.presentation.elements.ErrorBox
 import kotlinx.collections.immutable.persistentListOf
 import java.text.SimpleDateFormat
 import java.util.*
@@ -43,12 +43,26 @@ fun ListScreen(
 fun ListScreenContent(
     viewState: ListScreenViewState,
     eventHandler: (ListScreenEvent) -> Unit
-){
+) {
     eventHandler.invoke(ListScreenEvent.OnStart)
+
+    if (viewState.isError) {
+        ErrorBox()
+        return
+    }
+    if (viewState.isLoading) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            FadingCircle()
+        }
+        return
+    }
     Column(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
+
         GamesList(
             viewState = viewState,
             eventHandler = eventHandler
@@ -57,14 +71,21 @@ fun ListScreenContent(
 }
 
 @Composable
-fun GamesList(
+private fun GamesList(
     viewState: ListScreenViewState,
     eventHandler: (ListScreenEvent) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
-            .padding(10.dp)
+            .padding(
+                horizontal = 10.dp
+            )
     ) {
+        item {
+            Spacer(
+                modifier = Modifier.padding(5.dp)
+            )
+        }
         items(items = viewState.games) { gamePreview ->
             GameListItem(
                 gamePreview = gamePreview,
@@ -75,6 +96,11 @@ fun GamesList(
             Spacer(
                 modifier = Modifier
                     .padding(5.dp)
+            )
+        }
+        item {
+            Spacer(
+                modifier = Modifier.padding(5.dp)
             )
         }
     }

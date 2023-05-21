@@ -1,8 +1,11 @@
 package com.example.games.presentation.screens.gameScreen
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +27,8 @@ import com.example.games.domain.models.Game
 import com.example.games.domain.models.MinimumSystemRequirements
 import com.example.games.domain.models.Platform
 import com.example.games.domain.models.Screenshot
+import com.example.games.presentation.elements.ErrorBox
+import com.example.games.presentation.elements.LoadingBox
 import com.example.games.presentation.ui.theme.Typography
 import com.example.games.presentation.utils.getDrawable
 import com.example.games.presentation.utils.toCalendar
@@ -55,8 +60,11 @@ private fun GameScreenContent(
     viewState: GameScreenViewState,
     eventHandler: (GameScreenEvent) -> Unit
 ) {
-    if (viewState.game == null)
+    if (viewState.isError) {
+        ErrorBox()
         return
+    }
+
     Card(
         modifier = Modifier
             .fillMaxSize()
@@ -67,6 +75,11 @@ private fun GameScreenContent(
         shape = RoundedCornerShape(10.dp),
         elevation = 5.dp
     ) {
+        if (viewState.isLoading) {
+            LoadingBox()
+            return@Card
+        }
+
         Column(
             modifier = Modifier
                 .padding(
@@ -74,7 +87,7 @@ private fun GameScreenContent(
                 )
         ) {
             HeadInfo(
-                game = viewState.game
+                game = viewState.game!!
             )
             Spacer(
                 modifier = Modifier
@@ -129,6 +142,8 @@ private fun MainInfo(game: Game) {
 @Composable
 private fun Screenshots(screenshots: PersistentList<Screenshot>) {
     Column(
+        modifier = Modifier
+            .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -141,12 +156,19 @@ private fun Screenshots(screenshots: PersistentList<Screenshot>) {
                 modifier = Modifier
                     .padding(5.dp)
             )
-            AsyncImage(
-                model = screenshot.image,
-                contentDescription = null,
+            Box(
                 modifier = Modifier
-                    .clip(shape = RoundedCornerShape(10.dp))
-            )
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                AsyncImage(
+                    model = screenshot.image,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(shape = RoundedCornerShape(10.dp))
+                )
+            }
         }
     }
 }
@@ -261,8 +283,7 @@ private fun ParameterLong(name: String, value: String) {
     Column(
         modifier = Modifier
             .border(
-                width = 1.dp,
-                color = Color.Gray
+                width = 1.dp, color = Color.Gray
             )
             .padding(5.dp)
     ) {

@@ -22,15 +22,16 @@ class DataModule {
     @Provides
     @Singleton
     fun provideRetrofitInstance(okHttpClient: OkHttpClient): Retrofit {
-        return Retrofit.Builder().baseUrl(BuildConfig.GAMES_API_BASE_URL).client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create()).build()
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.GAMES_API_BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
     }
 
     @Provides
     fun provideOkHttpClient(): OkHttpClient {
-        return OkHttpClient.Builder().addInterceptor { chain ->
-            val request = chain.request().newBuilder().build()
-            chain.proceed(request)
-        }.build()
+        return OkHttpClient.Builder()
+            .build()
     }
 }

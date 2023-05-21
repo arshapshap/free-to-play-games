@@ -72,6 +72,8 @@ dependencies {
 
     implementation "org.jetbrains.kotlinx:kotlinx-collections-immutable:$collections_immutable_version"
 
+    implementation "com.github.commandiron:ComposeLoading:$compose_loading"
+
     implementation "androidx.navigation:navigation-compose:$compose_navigation"
     implementation "io.coil-kt:coil-compose:$coil_compose_version"
     implementation "androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_compose_version"
